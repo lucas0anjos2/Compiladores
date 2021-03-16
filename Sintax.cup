@@ -1,0 +1,121 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal    Comentario,
+            linha,
+            Tipo,
+            cadeia,
+            If,
+            Else,
+            Do,
+            While,
+            For,
+            Igual,
+            Soma,
+            Subtracao,
+            Multiplicacao,
+            Divisao,
+            Op_Logico,
+            Op_Relacional,
+            Op_Atribuicao,
+            Op_Incremento,
+            Op_Booleano,
+            Parenteses_a,
+            Parenteses_c,
+            Chave_a,
+            Chave_c,
+            Couchete_a,
+            Couchete_c,
+            Main,
+            P_Virgula,
+            Virgula,
+            palavraReservada,
+            Identificador,
+            Numero,
+            FuncaoLeitura,
+            ConstInteira,
+            ConstReal,
+            ConstString,
+            ERROR;
+
+non terminal CLASSE, DECLARACAOVAR, METODO, LISTAPARAM, PARAM, LISTAMETODO, MAIN, CMDATRIBUICAO, EXPRESSAO
+LISTACMD, CMD, CMDPRINT, CMDPRINTLN,CMDATRIB, CMDFUNC, EXPRESSAO;
+
+start with CLASSE;
+
+CLASSE ::= 
+    palavraReservada palavraReservada Identificador Chave_a LISTAMETODO MAIN Chave_c
+;
+
+DECLARACAOVAR ::= 
+    Tipo Identificador P_Virgula
+; 
+    
+METODO ::= 
+    Tipo Identificador Parenteses_a LISTAPARAM Parenteses_c Chave_a DECLARACAOVAR LISTACMD Chave_c
+;
+
+LISTAPARAM ::= 
+    PARAM Virgula LISTAPARAM|PARAM
+;
+
+PARAM ::= 
+    Tipo Identificador
+;
+
+LISTAMETODO ::=
+    LISTAMETODO METODO| 
+;
+
+MAIN ::= 
+    palavraReservada palavraReservada Tipo Main Parenteses_a Parenteses_c Chave_a DECLARACAOVAR LISTACMD Chave_c|
+;
+
+LISTACMD ::= 
+    LISTACMD CMD|
+;
+
+CMD ::= 
+    While Parenteses_a EXPRESSAO Parenteses_c CMD
+;
+
+CMDPRINT ::= 
+    palavraReservada Parenteses_a EXPRESSAO Parenteses_c P_Virgula
+;
+
+CMDPRINTLN ::= 
+    palavraReservada Parenteses_a EXPRESSAO Parenteses_c P_Virgula
+;
+
+CMDATRIB ::= Identificador Igual EXPRESSAO P_Virgula|
+             Identificador Couchete_a EXPRESSAO Couchete_f Igual Expressao P_Virgula
+;
+
+CMDFUNC ::= Identificador Parenteses_a Parenteses_a EXPRESSAO Parenteses_a 
+P_Virgula EXPRESSAO Parenteses_c Parenteses_c Parenteses_c
+;
+
+EXPRESSAO ::= Identificador Couchete_a EXPRESSAO Couchete_c|
+              Identificador|
+              Identificador  Parenteses_a Parenteses_a EXPRESSAO Parenteses_a 
+P_Virgula EXPRESSAO Parenteses_c Parenteses_c Parenteses_c|
+              ConstInteira|ConstReal|ConstString|Op_Booleano|Op_Booleano|
+              palavraResevada Tipo Couchete_a EXPRESSAO Couchete_f Igual EXPRESSAO|
+              Op_Soma EXPRESSAO|
+              Op_Subtracao EXPRESSAO|
+              Parenteses_a EXPRESSAO Parenteses_c
+;
